@@ -2,6 +2,11 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CreateUserDomainDto } from './dto/create-user.domain.dto';
 import { HydratedDocument, Model } from 'mongoose';
 
+export enum DeletionStatus {
+  NotDeleted = 'not-deleted',
+  PermanentDeleted = 'permanent-deleted',
+}
+
 @Schema({ timestamps: true })
 export class User {
   @Prop({ type: String, required: true })
@@ -12,6 +17,9 @@ export class User {
 
   @Prop({ type: String, required: true })
   passwordHash: string;
+
+  createdAt: Date;
+  updatedAt: Date;
 
   static createInstance(dto: CreateUserDomainDto): UserDocument {
     const user = new this();
@@ -26,7 +34,7 @@ export class User {
 
 export const UserSchema = SchemaFactory.createForClass(User);
 
-//регистрирует методы сущности в схеме
+//регистрирует методы сущности в схем
 UserSchema.loadClass(User);
 
 //Типизация документа

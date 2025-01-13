@@ -24,7 +24,6 @@ export class UsersService {
     });
 
     await this.usersRepository.save(user);
-
     return user._id.toString();
   }
 }
