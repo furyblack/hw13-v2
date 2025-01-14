@@ -17,7 +17,7 @@ export class UsersQueryRepository {
       _id: id,
       deletionStatus: DeletionStatus.NotDeleted,
     });
-    console.log(user);
+    console.log('get by', user);
     if (!user) {
       throw new NotFoundException('user not found');
     }

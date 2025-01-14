@@ -1,4 +1,14 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { CreateUserInputDto } from './input-dto/users.input-dto';
 import { UsersQueryRepository } from '../infrastructure/query/users.query-repository';
 import { UsersService } from '../application/users.service';
@@ -25,5 +35,10 @@ export class UsersController {
     const userId = await this.usersService.createUser(body);
     console.log('ese', userId);
     return this.usersQueryRepository.getByIdOrNotFoundFail(userId);
+  }
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async deleteUser(@Param('id') id: string): Promise<void> {
+    await this.usersService.deleteUser(id);
   }
 }

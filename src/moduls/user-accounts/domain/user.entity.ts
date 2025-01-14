@@ -21,6 +21,9 @@ export class User {
   createdAt: Date;
   updatedAt: Date;
 
+  @Prop({ enum: DeletionStatus, default: DeletionStatus.NotDeleted })
+  deletionStatus: DeletionStatus;
+
   static createInstance(dto: CreateUserDomainDto): UserDocument {
     const user = new this();
     user.email = dto.email;
@@ -29,6 +32,13 @@ export class User {
     // user.isEmailConfirmed = false;
 
     return user as UserDocument;
+  }
+
+  makeDeleted() {
+    if (this.deletionStatus !== DeletionStatus.NotDeleted) {
+      throw new Error('Entity already deleted');
+    }
+    this.deletionStatus = DeletionStatus.PermanentDeleted;
   }
 }
 

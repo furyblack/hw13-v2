@@ -38,11 +38,11 @@ export class UsersService {
   //   return user._id.toString();
   // }
 
-  // async deleteUser(id: string) {
-  //   const user = await this.usersRepository.findNonDeletedOrNotFoundFail(id);
-  //
-  //   user.makeDeleted();
-  //
-  //   await this.usersRepository.save(user);
-  // }
+  async deleteUser(id: string) {
+    const user = await this.usersRepository.findOrNotFoundFail(id);
+
+    user.makeDeleted();
+
+    await this.usersRepository.save(user);
+  }
 }
