@@ -6,7 +6,7 @@ export class BlogsViewDto {
   description: string;
   websiteUrl: string;
   createdAt: Date;
-  isMembership: string;
+  isMembership: boolean;
 
   static mapToView(blog: BlogDocument): BlogsViewDto {
     const dto = new BlogsViewDto();

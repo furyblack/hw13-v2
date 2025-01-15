@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { CreateBlogDomainDto } from '../dto/create-user.domain.dto';
 import { HydratedDocument, Model } from 'mongoose';
+import { DeletionStatus } from '../../user-accounts/domain/user.entity';
 
 @Schema({ timestamps: true })
 export class Blog {
@@ -10,10 +11,13 @@ export class Blog {
   description: string;
   @Prop({ type: String, required: true })
   websiteUrl: string;
-
-  isMembership: string;
+  @Prop({ type: Boolean, required: true })
+  isMembership: boolean;
 
   createdAt: Date;
+
+  @Prop({ enum: DeletionStatus, default: DeletionStatus.NotDeleted })
+  deletionStatus: DeletionStatus;
 
   static createInstance(dto: CreateBlogDomainDto): BlogDocument {
     const blog = new this();
@@ -21,8 +25,15 @@ export class Blog {
     blog.description = dto.description;
     blog.websiteUrl = dto.websiteUrl;
     blog.createdAt = new Date();
-
+    blog.isMembership = false;
     return blog as BlogDocument;
+  }
+
+  makeDeleted() {
+    if (this.deletionStatus !== DeletionStatus.NotDeleted) {
+      throw new Error('Entity already deleted');
+    }
+    this.deletionStatus = DeletionStatus.PermanentDeleted;
   }
 }
 
