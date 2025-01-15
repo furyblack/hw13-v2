@@ -10,7 +10,7 @@ export class Blog {
   description: string;
   @Prop({ type: String, required: true })
   websiteUrl: string;
-  @Prop({ type: String, required: true })
+
   isMembership: string;
 
   createdAt: Date;
@@ -32,4 +32,4 @@ BlogSchema.loadClass(Blog);
 
 export type BlogDocument = HydratedDocument<Blog>;
 
-export type BlogModelType = Model<BlogDocument>;
+export type BlogModelType = Model<BlogDocument> & typeof Blog;
