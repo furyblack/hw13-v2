@@ -10,13 +10,16 @@ import {
   HttpStatus,
   Put,
 } from '@nestjs/common';
-import { CreateBlogDomainDto } from '../dto/create-user.domain.dto';
+
 import { BlogsViewDto } from './view-dto/blogs.view-dto';
+
+import { GetBlogsQueryParams } from './input-dto/get-blogs-query-params.input-dto';
+
+import { UpdateBlogInputDto } from './input-dto/update-blog.input-dto';
 import { BlogsQueryRepository } from '../infrastructure/query/blogs.query-repository';
 import { BlogsService } from '../application/blogs.service';
-import { GetBlogsQueryParams } from './input-dto/get-blogs-query-params.input-dto';
-import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
-import { UpdateBlogInputDto } from './input-dto/update-blog.input-dto';
+import { PaginatedViewDto } from '../../../../core/dto/base.paginated.view-dto';
+import { CreateBlogDomainDto } from '../dto/create-user.domain.dto';
 
 @Controller('blogs')
 export class BlogsController {

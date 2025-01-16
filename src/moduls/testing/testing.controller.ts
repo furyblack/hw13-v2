@@ -1,7 +1,10 @@
 import { Controller, Delete, HttpCode, HttpStatus } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User, UserModelType } from '../user-accounts/domain/user.entity';
-import { Blog, BlogModelType } from '../bloggers-platform/domain/blog.entity';
+import {
+  Blog,
+  BlogModelType,
+} from '../bloggers-platform/blogs/domain/blog.entity';
 
 @Controller('testing')
 export class TestingController {
