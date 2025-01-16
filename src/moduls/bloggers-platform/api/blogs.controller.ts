@@ -16,6 +16,7 @@ import { BlogsQueryRepository } from '../infrastructure/query/blogs.query-reposi
 import { BlogsService } from '../application/blogs.service';
 import { GetBlogsQueryParams } from './input-dto/get-blogs-query-params.input-dto';
 import { PaginatedViewDto } from '../../../core/dto/base.paginated.view-dto';
+import { UpdateBlogInputDto } from './input-dto/update-blog.input-dto';
 
 @Controller('blogs')
 export class BlogsController {
@@ -46,7 +47,12 @@ export class BlogsController {
     await this.blogService.deleteBlog(id);
   }
   @Put(':id')
-  async updateBlog(@Param('id') id: string): Promise<BlogsViewDto> {
-    return this.blogQueryRepository.getByIdOrNotFoundFail(id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async updateBlog(
+    @Param('id') id: string,
+    @Body() body: UpdateBlogInputDto,
+  ): Promise<BlogsViewDto> {
+    const blogId = await this.blogService.updateBlog(id, body);
+    return this.blogQueryRepository.getByIdOrNotFoundFail(blogId);
   }
 }

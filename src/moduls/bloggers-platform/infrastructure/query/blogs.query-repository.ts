@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Blog, BlogModelType } from '../../domain/blog.entity';
 import { BlogsViewDto } from '../../api/view-dto/blogs.view-dto';
@@ -19,7 +19,7 @@ export class BlogsQueryRepository {
       deletionStatus: { $ne: DeletionStatus.PermanentDeleted },
     });
     if (!blog) {
-      throw new Error('blog not found');
+      throw new NotFoundException('blog not found');
     }
     return BlogsViewDto.mapToView(blog);
   }
