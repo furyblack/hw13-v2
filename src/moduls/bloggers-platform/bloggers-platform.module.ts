@@ -12,6 +12,6 @@ import { BlogsRepository } from './infrastructure/blogs-repository';
   ],
   controllers: [BlogsController],
   providers: [BlogsService, BlogsQueryRepository, BlogsRepository],
-  exports: [],
+  exports: [MongooseModule],
 })
 export class BloggerPlatformModule {}
