@@ -5,13 +5,28 @@ import { BlogsQueryRepository } from './blogs/infrastructure/query/blogs.query-r
 import { BlogsService } from './blogs/application/blogs.service';
 import { BlogsRepository } from './blogs/infrastructure/blogs-repository';
 import { BlogsController } from './blogs/api/blogs.controller';
+import { PostEntity, PostSchema } from './posts/domain/post.entity';
+import { PostsController } from './posts/api/posts.controller';
+import { PostsService } from './posts/application/posts.service';
+import { PostsQueryRepository } from './posts/infrastructure/query/posts.query-repository';
+import { PostsRepository } from './posts/infrastructure/posts-repository';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Blog.name, schema: BlogSchema }]),
+    MongooseModule.forFeature([
+      { name: Blog.name, schema: BlogSchema },
+      { name: PostEntity.name, schema: PostSchema },
+    ]),
   ],
-  controllers: [BlogsController],
-  providers: [BlogsService, BlogsQueryRepository, BlogsRepository],
+  controllers: [BlogsController, PostsController],
+  providers: [
+    BlogsService,
+    BlogsQueryRepository,
+    BlogsRepository,
+    PostsService,
+    PostsQueryRepository,
+    PostsRepository,
+  ],
   exports: [MongooseModule],
 })
 export class BloggerPlatformModule {}
