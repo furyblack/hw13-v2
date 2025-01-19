@@ -53,4 +53,36 @@ export class PostsQueryRepository {
       size: query.pageSize,
     });
   }
+  async getAllPostsForBlog(
+    blogId: string,
+    query: GetPostsQueryParams,
+  ): Promise<PaginatedViewDto<PostsViewDto[]>> {
+    const filter: FilterQuery<PostEntity> = {
+      deletionStatus: DeletionStatus.NotDeleted,
+      blogId: blogId,
+    };
+    if (query.searchTitleTerm) {
+      filter.$or = filter.$or || [];
+      filter.$or.push({
+        title: { $regex: query.searchTitleTerm, $options: 'i' },
+      });
+    }
+
+    const posts = await this.postModel
+      .find(filter)
+      .sort({ [query.sortBy]: query.sortDirection })
+      .skip(query.calculateSkip())
+      .limit(query.pageSize);
+
+    const totalCount = await this.postModel.countDocuments(filter);
+
+    const items = posts.map(PostsViewDto.mapToView);
+
+    return PaginatedViewDto.mapToView({
+      items,
+      totalCount,
+      page: query.pageNumber,
+      size: query.pageSize,
+    });
+  }
 }
