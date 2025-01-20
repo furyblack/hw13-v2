@@ -2,7 +2,13 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DeletionStatus } from '../../../user-accounts/domain/user.entity';
 import { CreatePostDomainDto } from '../dto/create-post.dto';
 import { HydratedDocument, Model } from 'mongoose';
+import { Blog } from '../../blogs/domain/blog.entity';
 
+type newestLikes = {
+  addedAt: string;
+  userId: string;
+  login: string;
+};
 @Schema({ timestamps: true })
 export class PostEntity {
   @Prop()
@@ -12,10 +18,16 @@ export class PostEntity {
   @Prop()
   blogId: string;
   @Prop()
+  blogName: string;
+  @Prop()
   shortDescription: string;
   createdAt: Date;
   @Prop()
   likesCount: number;
+  @Prop()
+  dislikesCount: number;
+  @Prop({ type: Array, default: [] })
+  newestLikes: newestLikes[];
   @Prop({ enum: DeletionStatus, default: DeletionStatus.NotDeleted })
   deletionStatus: DeletionStatus;
 
@@ -24,9 +36,12 @@ export class PostEntity {
     post.title = dto.title;
     post.content = dto.content;
     post.blogId = dto.blogId;
+    post.blogName = Blog.name;
     post.shortDescription = dto.shortDescription;
     post.createdAt = new Date();
     post.likesCount = 0;
+    post.dislikesCount = 0;
+    post.newestLikes = [];
     post.deletionStatus = DeletionStatus.NotDeleted;
     return post as PostDocument;
   }

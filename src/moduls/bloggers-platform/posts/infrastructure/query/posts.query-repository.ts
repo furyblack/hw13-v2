@@ -13,6 +13,7 @@ export class PostsQueryRepository {
     @InjectModel(PostEntity.name)
     private postModel: PostModelType,
   ) {}
+
   async getByIdOrNotFoundFail(id: string): Promise<PostsViewDto> {
     const post = await this.postModel.findOne({
       _id: id,
@@ -21,6 +22,7 @@ export class PostsQueryRepository {
     if (!post) {
       throw new NotFoundException('post not found');
     }
+
     return PostsViewDto.mapToView(post);
   }
   async getAll(
@@ -44,7 +46,7 @@ export class PostsQueryRepository {
 
     const totalCount = await this.postModel.countDocuments(filter);
 
-    const items = posts.map(PostsViewDto.mapToView);
+    const items = posts.map((p) => PostsViewDto.mapToView(p));
 
     return PaginatedViewDto.mapToView({
       items,
@@ -76,7 +78,7 @@ export class PostsQueryRepository {
 
     const totalCount = await this.postModel.countDocuments(filter);
 
-    const items = posts.map(PostsViewDto.mapToView);
+    const items = posts.map((p) => PostsViewDto.mapToView(p));
 
     return PaginatedViewDto.mapToView({
       items,

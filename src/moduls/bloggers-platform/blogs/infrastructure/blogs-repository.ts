@@ -11,7 +11,7 @@ export class BlogsRepository {
     await blog.save();
   }
 
-  async findByid(id: string): Promise<BlogDocument | null> {
+  async findById(id: string): Promise<BlogDocument | null> {
     return this.blogModel.findOne({
       _id: id,
       deletionStatus: { $ne: DeletionStatus.PermanentDeleted },
@@ -19,7 +19,7 @@ export class BlogsRepository {
   }
 
   async findOrNotFoundFail(id: string): Promise<BlogDocument> {
-    const blog = await this.findByid(id);
+    const blog = await this.findById(id);
     if (!blog) {
       throw new NotFoundException('blog not found');
     }
