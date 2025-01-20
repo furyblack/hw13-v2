@@ -10,7 +10,7 @@ type newestLikes = {
   login: string;
 };
 @Schema({ timestamps: true })
-export class PostEntity {
+export class Post {
   @Prop()
   title: string;
   @Prop()
@@ -59,10 +59,10 @@ export class PostEntity {
   }
 }
 
-export const PostSchema = SchemaFactory.createForClass(PostEntity);
+export const PostSchema = SchemaFactory.createForClass(Post);
 
-PostSchema.loadClass(PostEntity);
+PostSchema.loadClass(Post);
 
-export type PostDocument = HydratedDocument<PostEntity>;
+export type PostDocument = HydratedDocument<Post>;
 
-export type PostModelType = Model<PostDocument> & typeof PostEntity;
+export type PostModelType = Model<PostDocument> & typeof Post;

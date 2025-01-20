@@ -1,4 +1,4 @@
-import { PostDocument } from '../../domain/post.entity';
+import { PostDocument } from '../../domain/post';
 
 export enum MyStatus {
   None = 'None',

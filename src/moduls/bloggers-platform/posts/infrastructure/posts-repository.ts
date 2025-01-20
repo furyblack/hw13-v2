@@ -1,11 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PostEntity, PostDocument, PostModelType } from '../domain/post.entity';
+import { Post, PostDocument, PostModelType } from '../domain/post';
 import { DeletionStatus } from '../../../user-accounts/domain/user.entity';
 
 @Injectable()
 export class PostsRepository {
-  constructor(@InjectModel(PostEntity.name) private postModel: PostModelType) {}
+  constructor(@InjectModel(Post.name) private postModel: PostModelType) {}
   async save(post: PostDocument) {
     await post.save();
   }

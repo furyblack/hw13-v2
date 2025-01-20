@@ -1,17 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { PostEntity, PostModelType } from '../../domain/post.entity';
+import { Post, PostModelType } from '../../domain/post';
 import { PostsViewDto } from '../../api/view-dto/posts.view-dto';
 import { DeletionStatus } from '../../../../user-accounts/domain/user.entity';
 import { GetPostsQueryParams } from '../../api/input-dto/get-posts-query-params.input-dto';
 import { PaginatedViewDto } from '../../../../../core/dto/base.paginated.view-dto';
 import { FilterQuery } from 'mongoose';
+import { Blog, BlogModelType } from '../../../blogs/domain/blog.entity';
 
 @Injectable()
 export class PostsQueryRepository {
   constructor(
-    @InjectModel(PostEntity.name)
+    @InjectModel(Post.name)
     private postModel: PostModelType,
+    @InjectModel(Blog.name)
+    private blogModel: BlogModelType,
   ) {}
 
   async getByIdOrNotFoundFail(id: string): Promise<PostsViewDto> {
@@ -28,7 +31,7 @@ export class PostsQueryRepository {
   async getAll(
     query: GetPostsQueryParams,
   ): Promise<PaginatedViewDto<PostsViewDto[]>> {
-    const filter: FilterQuery<PostEntity> = {
+    const filter: FilterQuery<Post> = {
       deletionStatus: DeletionStatus.NotDeleted,
     };
     if (query.searchTitleTerm) {
@@ -43,6 +46,9 @@ export class PostsQueryRepository {
       .sort({ [query.sortBy]: query.sortDirection })
       .skip(query.calculateSkip())
       .limit(query.pageSize);
+    if (!posts) {
+      throw new NotFoundException('post not found');
+    }
 
     const totalCount = await this.postModel.countDocuments(filter);
 
@@ -59,10 +65,20 @@ export class PostsQueryRepository {
     blogId: string,
     query: GetPostsQueryParams,
   ): Promise<PaginatedViewDto<PostsViewDto[]>> {
-    const filter: FilterQuery<PostEntity> = {
+    console.log(blogId);
+    const blogExists = await this.blogModel.exists({
+      _id: blogId,
+      deletionStatus: DeletionStatus.NotDeleted,
+    });
+    if (!blogExists) {
+      throw new NotFoundException('Blog not found');
+    }
+
+    const filter: FilterQuery<Post> = {
       deletionStatus: DeletionStatus.NotDeleted,
       blogId: blogId,
     };
+
     if (query.searchTitleTerm) {
       filter.$or = filter.$or || [];
       filter.$or.push({
