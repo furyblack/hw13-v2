@@ -3,6 +3,7 @@ export class CreatePostDomainDto {
   shortDescription: string;
   content: string;
   blogId: string;
+  blogName: string;
 }
 export class CreatePostDto {
   title: string;
@@ -15,4 +16,5 @@ export class UpdatePostDto {
   shortDescription: string;
   content: string;
   blogId: string;
+  blogName: string;
 }

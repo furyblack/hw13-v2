@@ -40,15 +40,13 @@ export class PostsQueryRepository {
         title: { $regex: query.searchTitleTerm, $options: 'i' },
       });
     }
+    console.log('soooort', query.sortBy);
 
     const posts = await this.postModel
       .find(filter)
       .sort({ [query.sortBy]: query.sortDirection })
       .skip(query.calculateSkip())
       .limit(query.pageSize);
-    if (!posts) {
-      throw new NotFoundException('post not found');
-    }
 
     const totalCount = await this.postModel.countDocuments(filter);
 
@@ -65,7 +63,6 @@ export class PostsQueryRepository {
     blogId: string,
     query: GetPostsQueryParams,
   ): Promise<PaginatedViewDto<PostsViewDto[]>> {
-    console.log(blogId);
     const blogExists = await this.blogModel.exists({
       _id: blogId,
       deletionStatus: DeletionStatus.NotDeleted,

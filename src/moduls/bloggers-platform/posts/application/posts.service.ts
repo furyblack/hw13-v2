@@ -21,11 +21,20 @@ export class PostsService {
   ) {}
 
   async createPost(dto: CreatePostDto): Promise<string> {
+    const blog = await this.blogModel.findOne({
+      _id: dto.blogId,
+      deletionStatus: DeletionStatus.NotDeleted,
+    });
+
+    if (!blog) {
+      throw new NotFoundException('Blog not found');
+    }
     const post = this.postModel.createInstance({
       title: dto.title,
       shortDescription: dto.shortDescription,
       content: dto.content,
       blogId: dto.blogId,
+      blogName: blog.name,
     });
     await this.postRepository.save(post);
     return post._id.toString();
@@ -42,11 +51,15 @@ export class PostsService {
     if (!blogExists) {
       throw new NotFoundException('Blog not found');
     }
+    const blog = await this.blogModel.findOne({
+      _id: blogId,
+    });
     const post = this.postModel.createInstance({
       title: dto.title,
       shortDescription: dto.shortDescription,
       content: dto.content,
       blogId: blogId,
+      blogName: blog!.name,
     });
     await this.postRepository.save(post);
     return post._id.toString();

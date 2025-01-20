@@ -2,7 +2,6 @@ import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { DeletionStatus } from '../../../user-accounts/domain/user.entity';
 import { CreatePostDomainDto } from '../dto/create-post.dto';
 import { HydratedDocument, Model } from 'mongoose';
-import { Blog } from '../../blogs/domain/blog.entity';
 
 type newestLikes = {
   addedAt: string;
@@ -36,7 +35,7 @@ export class Post {
     post.title = dto.title;
     post.content = dto.content;
     post.blogId = dto.blogId;
-    post.blogName = Blog.name;
+    post.blogName = dto.blogName;
     post.shortDescription = dto.shortDescription;
     post.createdAt = new Date();
     post.likesCount = 0;
