@@ -29,10 +29,10 @@ export class BlogsQueryRepository {
     const filter: FilterQuery<Blog> = {
       deletionStatus: DeletionStatus.NotDeleted,
     };
-    if (query.searchLoginTerm) {
+    if (query.searchNameTerm) {
       filter.$or = filter.$or || [];
       filter.$or.push({
-        login: { $regex: query.searchLoginTerm, $options: 'i' },
+        name: { $regex: query.searchNameTerm, $options: 'i' },
       });
     }
 

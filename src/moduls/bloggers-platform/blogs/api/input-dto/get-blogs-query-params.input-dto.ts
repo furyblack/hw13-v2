@@ -3,6 +3,6 @@ import { BaseSortablePaginationParams } from '../../../../../core/dto/base.query
 
 export class GetBlogsQueryParams extends BaseSortablePaginationParams<BlogsSortBy> {
   sortBy = BlogsSortBy.CreatedAt;
-  searchLoginTerm: string | null = null;
+  searchNameTerm: string | null = null;
   searchEmailTerm: string | null = null;
 }
