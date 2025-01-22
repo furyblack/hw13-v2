@@ -1,9 +1,12 @@
 import { CreateUserDto } from '../src/moduls/user-accounts/dto/create-user.dto';
 import { UsersTestManager } from './helpers/users-test-manager';
 import { JwtService } from '@nestjs/jwt';
-import { INestApplication } from '@nestjs/common';
+import { HttpStatus, INestApplication } from '@nestjs/common';
 import { initSettings } from './helpers/init-settings';
 import { deleteAllData } from './helpers/delete-all-data';
+import request from 'supertest';
+import { PaginatedViewDto } from '../src/core/dto/base.paginated.view-dto';
+import { UserViewDto } from '../src/moduls/user-accounts/api/view-dto/users.view-dto';
 
 describe('users', () => {
   let app: INestApplication;
@@ -42,5 +45,18 @@ describe('users', () => {
       id: expect.any(String),
       createdAt: expect.any(String),
     });
+  });
+  it('should get users with paging', async () => {
+    const users = await userTestManger.createSeveralUsers(12);
+    const { body: responseBody } = (await request(app.getHttpServer())
+      .get(`/api/users?pageNumber=2&sortDirection=asc`)
+      .expect(HttpStatus.OK)) as { body: PaginatedViewDto<UserViewDto> };
+
+    expect(responseBody.totalCount).toBe(12);
+    expect(responseBody.items).toHaveLength(2);
+    expect(responseBody.pagesCount).toBe(2);
+    //asc sorting
+    expect(responseBody.items[1]).toEqual(users[users.length - 1]);
+    //etc...
   });
 });
