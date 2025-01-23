@@ -30,4 +30,17 @@ export class UsersTestManager {
     }
     return Promise.all(usersPromises);
   }
+  async getUserById(
+    id: string,
+    statusCode: number = HttpStatus.OK,
+  ): Promise<UserViewDto> {
+    const response = await request(this.app.getHttpServer())
+      .get(`/api/users/${id}`)
+      .expect(statusCode);
+    return response.body;
+  }
+  async deleteUser(id: string) {
+    const server = this.app.getHttpServer(); // получаем сервер для тестов
+    await request(server).delete(`/api/users/${id}`).expect(204);
+  }
 }

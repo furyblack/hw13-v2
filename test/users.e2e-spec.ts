@@ -59,4 +59,29 @@ describe('users', () => {
     expect(responseBody.items[1]).toEqual(users[users.length - 1]);
     //etc...
   });
+  it('should delete user by id', async () => {
+    // сначала создаем юзера
+    const body: CreateUserDto = {
+      login: 'name1',
+      password: 'qwerty',
+      email: 'email@email.em',
+    };
+
+    const createdUser = await userTestManger.createUser(body);
+    //удаляем пользователя
+    await userTestManger.deleteUser(createdUser.id);
+    //проверяем что удалился
+    const server = app.getHttpServer();
+    await request(server)
+      .get(`/api/users/${createdUser.id}`)
+      .expect(HttpStatus.NOT_FOUND);
+
+    // expect(createdUser).toEqual({
+    //   login: body.login,
+    //   email: body.email,
+    //   id: expect.any(String),
+    //   createdAt: expect.any(String),
+    // });
+  });
+  //удаляем юзера
 });
