@@ -75,13 +75,5 @@ describe('users', () => {
     await request(server)
       .get(`/api/users/${createdUser.id}`)
       .expect(HttpStatus.NOT_FOUND);
-
-    // expect(createdUser).toEqual({
-    //   login: body.login,
-    //   email: body.email,
-    //   id: expect.any(String),
-    //   createdAt: expect.any(String),
-    // });
   });
-  //удаляем юзера
 });
