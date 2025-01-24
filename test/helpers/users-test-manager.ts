@@ -10,11 +10,11 @@ export class UsersTestManager {
     createModel: CreateUserInputDto,
     statusCode: number = HttpStatus.CREATED,
   ): Promise<UserViewDto> {
-    const responce = await request(this.app.getHttpServer())
+    const response = await request(this.app.getHttpServer())
       .post('/api/users')
       .send(createModel)
       .expect(statusCode);
-    return responce.body;
+    return response.body;
   }
   async createSeveralUsers(count: number): Promise<UserViewDto[]> {
     const usersPromises = [] as Promise<UserViewDto>[];

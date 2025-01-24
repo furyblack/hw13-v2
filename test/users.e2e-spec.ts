@@ -12,8 +12,8 @@ describe('users', () => {
   let app: INestApplication;
   let userTestManger: UsersTestManager;
   beforeAll(async () => {
-    const result = await initSettings((moduleBuider) => {
-      moduleBuider.overrideProvider(JwtService).useValue(
+    const result = await initSettings((moduleBuilder) => {
+      moduleBuilder.overrideProvider(JwtService).useValue(
         new JwtService({
           secret: 'access-token-secret',
           signOptions: { expiresIn: '2s' },

@@ -5,6 +5,7 @@ import { Connection } from 'mongoose';
 import { getConnectionToken } from '@nestjs/mongoose';
 import { UsersTestManager } from './users-test-manager';
 import { deleteAllData } from './delete-all-data';
+import { BlogsTestManager } from './blogs-test-manager';
 
 export const initSettings = async (
   //передаем callback, который получает ModuleBuilder, если хотим изменить настройку тестового модуля
@@ -28,6 +29,7 @@ export const initSettings = async (
   const databaseConnection = app.get<Connection>(getConnectionToken());
   const httpServer = app.getHttpServer();
   const userTestManger = new UsersTestManager(app);
+  const blogTestManager = new BlogsTestManager(app);
 
   await deleteAllData(app);
 
@@ -36,5 +38,6 @@ export const initSettings = async (
     databaseConnection,
     httpServer,
     userTestManger,
+    blogTestManager,
   };
 };
