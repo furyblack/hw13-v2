@@ -3,6 +3,7 @@ import { CreateBlogDomainDto } from '../../src/moduls/bloggers-platform/blogs/dt
 import { BlogsViewDto } from '../../src/moduls/bloggers-platform/blogs/api/view-dto/blogs.view-dto';
 import request from 'supertest';
 import { delay } from './delay';
+import { UpdateBlogDto } from '../../src/moduls/bloggers-platform/blogs/dto/create-blog.dto';
 
 export class BlogsTestManager {
   constructor(private app: INestApplication) {}
@@ -29,5 +30,15 @@ export class BlogsTestManager {
       blogsPromises.push(response);
     }
     return Promise.all(blogsPromises);
+  }
+  async deleteBlog(id: string) {
+    const server = this.app.getHttpServer();
+    await request(server).delete(`/api/blogs/${id}`).expect(204);
+  }
+  async updateBlog(id: string, updateBody: UpdateBlogDto): Promise<void> {
+    await request(this.app.getHttpServer())
+      .put(`/api/blogs/${id}`)
+      .send(updateBody)
+      .expect(HttpStatus.NO_CONTENT);
   }
 }

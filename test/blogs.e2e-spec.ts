@@ -3,7 +3,10 @@ import { JwtService } from '@nestjs/jwt';
 import { deleteAllData } from './helpers/delete-all-data';
 import { BlogsTestManager } from './helpers/blogs-test-manager';
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import { CreateBlogDto } from '../src/moduls/bloggers-platform/blogs/dto/create-blog.dto';
+import {
+  CreateBlogDto,
+  UpdateBlogDto,
+} from '../src/moduls/bloggers-platform/blogs/dto/create-blog.dto';
 import request from 'supertest';
 import { PaginatedViewDto } from '../src/core/dto/base.paginated.view-dto';
 import { BlogsViewDto } from '../src/moduls/bloggers-platform/blogs/api/view-dto/blogs.view-dto';
@@ -58,5 +61,73 @@ describe('blogs', () => {
     expect(responseBody.items).toHaveLength(2);
     expect(responseBody.pagesCount).toBe(2);
     expect(responseBody.items[1]).toEqual(blogs[blogs.length - 1]);
+  });
+  it('should get blog by Id', async () => {
+    //создаю пользователя которого буду получать
+    const body: CreateBlogDto = {
+      name: 'string',
+      description: 'string',
+      websiteUrl:
+        'https://p.7H1rV.DE-7hHrXZ9-ecNVheetttF66YKCJ_-gjJz1zDp0fQ6Yk1RCgUP00kPHQQ-ZuYOna0386PCmCt6VFpYShwgjX',
+    };
+    const createdBlog = await blogTestManager.createBlog(body);
+
+    // теперь получаем блог по ID
+    const { body: responseBody } = await request(app.getHttpServer())
+      .get(`/api/blogs/${createdBlog.id}`)
+      .expect(HttpStatus.OK);
+    expect(responseBody.id).toBe(createdBlog.id);
+    expect(responseBody.name).toBe(createdBlog.name);
+    expect(responseBody.description).toBe(createdBlog.description);
+    expect(responseBody.websiteUrl).toBe(createdBlog.websiteUrl);
+  });
+  it('should delete blog by id', async () => {
+    //создаю пользователя которого буду удалять
+    const body: CreateBlogDto = {
+      name: 'string',
+      description: 'string',
+      websiteUrl:
+        'https://p.7H1rV.DE-7hHrXZ9-ecNVheetttF66YKCJ_-gjJz1zDp0fQ6Yk1RCgUP00kPHQQ-ZuYOna0386PCmCt6VFpYShwgjX',
+    };
+
+    const createdBlog = await blogTestManager.createBlog(body);
+    await blogTestManager.deleteBlog(createdBlog.id);
+
+    //проверяю что удалился
+    const server = app.getHttpServer();
+    await request(server)
+      .get(`/api/blogs/${createdBlog.id}`)
+      .expect(HttpStatus.NOT_FOUND);
+  });
+  it('should update blog by id', async () => {
+    //создаю пользователя которого буду обновлять
+    const body: CreateBlogDto = {
+      name: 'string',
+      description: 'string',
+      websiteUrl:
+        'https://p.7H1rV.DE-7hHrXZ9-ecNVheetttF66YKCJ_-gjJz1zDp0fQ6Yk1RCgUP00kPHQQ-ZuYOna0386PCmCt6VFpYShwgjX',
+    };
+
+    const createdBlog = await blogTestManager.createBlog(body);
+
+    // 2. Подготавливаем данные для обновления
+    const updateBody: UpdateBlogDto = {
+      name: 'Updated Blog Name',
+      description: 'Updated description',
+      websiteUrl: 'https://updated-website.com',
+    };
+
+    // 3. Обновляем блог
+    await blogTestManager.updateBlog(createdBlog.id, updateBody);
+
+    // 4. Получаем обновленный блог и проверяем, что данные изменились
+    const { body: responseBody } = await request(app.getHttpServer())
+      .get(`/api/blogs/${createdBlog.id}`)
+      .expect(HttpStatus.OK);
+
+    expect(responseBody.id).toBe(createdBlog.id);
+    expect(responseBody.name).toBe(updateBody.name);
+    expect(responseBody.description).toBe(updateBody.description);
+    expect(responseBody.websiteUrl).toBe(updateBody.websiteUrl);
   });
 });

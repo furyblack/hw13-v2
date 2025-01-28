@@ -38,6 +38,8 @@ export class Blog {
   }
   update(dto: UpdateBlogDto) {
     this.name = dto.name;
+    this.description = dto.description;
+    this.websiteUrl = dto.websiteUrl;
   }
 }
 
