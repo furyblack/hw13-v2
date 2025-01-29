@@ -63,7 +63,7 @@ describe('blogs', () => {
     expect(responseBody.items[1]).toEqual(blogs[blogs.length - 1]);
   });
   it('should get blog by Id', async () => {
-    //создаю пользователя которого буду получать
+    //создаю блог, который буду получать
     const body: CreateBlogDto = {
       name: 'string',
       description: 'string',
@@ -82,7 +82,7 @@ describe('blogs', () => {
     expect(responseBody.websiteUrl).toBe(createdBlog.websiteUrl);
   });
   it('should delete blog by id', async () => {
-    //создаю пользователя которого буду удалять
+    //создаю блог, который буду удалять
     const body: CreateBlogDto = {
       name: 'string',
       description: 'string',

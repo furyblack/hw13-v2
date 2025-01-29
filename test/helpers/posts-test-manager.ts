@@ -1,7 +1,10 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { PostsViewDto } from '../../src/moduls/bloggers-platform/posts/api/view-dto/posts.view-dto';
-import { CreatePostDto } from '../../src/moduls/bloggers-platform/posts/dto/create-post.dto';
+import {
+  CreatePostDto,
+  UpdatePostDto,
+} from '../../src/moduls/bloggers-platform/posts/dto/create-post.dto';
 import { delay } from './delay';
 import { CreateBlogDto } from '../../src/moduls/bloggers-platform/blogs/dto/create-blog.dto';
 import { BlogsTestManager } from './blogs-test-manager';
@@ -50,5 +53,15 @@ export class PostsTestManager {
 
     // Ждем, пока все посты будут созданы
     return Promise.all(postsPromises);
+  }
+  async deletePost(postId: string): Promise<void> {
+    const server = this.app.getHttpServer();
+    await request(server).delete(`/api/posts/${postId}`).expect(204);
+  }
+  async updatePost(postId: string, updateBody: UpdatePostDto): Promise<void> {
+    await request(this.app.getHttpServer())
+      .put(`/api/posts/${postId}`)
+      .send(updateBody)
+      .expect(HttpStatus.NO_CONTENT);
   }
 }
